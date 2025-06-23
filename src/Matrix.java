@@ -47,4 +47,13 @@ public class Matrix {
 		}
 		return sum;
 	}
+	public void addVectors(Matrix other){
+		if (this.rows != other.rows || other.cols != 1 || this.cols != 1) {
+			throw new IllegalArgumentException("Matrix dimensions must match for vector addition.");
+		}
+		for (int i = 0; i < other.rows; i++){
+			data[i][0] += other.data[i][0];
+		}
+	}
+	
 }
