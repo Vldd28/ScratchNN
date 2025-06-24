@@ -55,5 +55,23 @@ public class Matrix {
 			data[i][0] += other.data[i][0];
 		}
 	}
-	
+	public void transpose(){
+		for(int i =0; i<rows; i++){
+			for(int j =0; j<cols; j++){
+				data[i][j] = data[j][i];
+			}
+		}
+	}
+	public Matrix elementWiseMultiply(Matrix other){
+		if (this.rows != other.rows || this.cols != other.cols){
+			throw new IllegalArgumentException("Matrix dimensions must have the same length.");
+		}
+		Matrix result = new Matrix(this.rows, other.cols);
+		for (int i = 0; i < this.rows; i++){
+			for (int j = 0; j < other.cols; j++){
+				result.data[i][j] = data[i][j] * other.data[i][j];
+			}
+		}
+		return result;
+	}
 }
