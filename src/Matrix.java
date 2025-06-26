@@ -18,6 +18,7 @@ public class Matrix {
 			System.arraycopy(inputData[i], 0, data[i], 0, cols);
 		}
 	}
+
 	public double[] getCol(int col){
 		double[] result = new double[rows];
 		for (int i = 0 ;i < rows ;i++){
@@ -25,6 +26,7 @@ public class Matrix {
 		}
 		return result;
 	}
+
 	public Matrix multiply(Matrix other) {
 		if (this.cols != other.rows) {
 			throw new IllegalArgumentException("Incompatible matrix sizes for multiplication.");
@@ -37,6 +39,7 @@ public class Matrix {
 		}
 		return result;
 	}
+
 	public static double dotProduct(double[]v1, double[]v2){
 		if (v1.length != v2.length){
 			throw new IllegalArgumentException("Vectors must have the same length.");
@@ -47,6 +50,7 @@ public class Matrix {
 		}
 		return sum;
 	}
+
 	public void addVectors(Matrix other){
 		if (this.rows != other.rows || other.cols != 1 || this.cols != 1) {
 			throw new IllegalArgumentException("Matrix dimensions must match for vector addition.");
@@ -55,13 +59,20 @@ public class Matrix {
 			data[i][0] += other.data[i][0];
 		}
 	}
-	public void transpose(){
-		for(int i =0; i<rows; i++){
-			for(int j =0; j<cols; j++){
-				data[i][j] = data[j][i];
+
+	public void transpose() {
+		Matrix transposed = new Matrix(cols,rows);
+		for (int i = 0; i < rows; i++) {
+			for (int j = 0; j < cols; j++) {
+				transposed.data[j][i] = data[i][j];
 			}
 		}
+		this.data = transposed.data;
+		int temp = rows;
+		rows = cols;
+		cols = temp;
 	}
+
 	public Matrix elementWiseMultiply(Matrix other){
 		if (this.rows != other.rows || this.cols != other.cols){
 			throw new IllegalArgumentException("Matrix dimensions must have the same length.");

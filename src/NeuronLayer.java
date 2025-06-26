@@ -4,8 +4,8 @@ public class NeuronLayer {
 	Matrix weights;
 	Matrix biases;
 	public NeuronLayer(Matrix W, Matrix b){
-		weights = W;
-		biases = b;
+		this.weights = W;
+		this.biases = b;
 	}
 	public Matrix forward(Matrix input){
 		Matrix result = weights.multiply(input);

@@ -22,5 +22,14 @@ public class Main {
 		for (int i = 0; i < output.rows; i++) {
 			System.out.println(output.data[i][0]);
 		}
+
+		System.out.println("testing the transpose");
+		Matrix trans = new Matrix(biasesArray);
+		trans.transpose();
+		for(int i = 0; i < trans.rows; i++)
+		{
+			for(int j = 0; j < trans.cols; j++)
+				System.out.println(trans.data[i][j]);
+		}
 	}
 }
