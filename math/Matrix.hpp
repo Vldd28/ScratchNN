@@ -20,10 +20,10 @@ public:
     const double& operator()(int r, int c) const;
 
     // Matrix operations (CPU)
-    Matrix multiplyCPU(const Matrix& other);
+    Matrix multiplyCPU(const Matrix& other) const;
 
     // Matrix operations (GPU)
-    Matrix multiplyCUDA(const Matrix& other);
+    Matrix multiplyCUDA(const Matrix& other) const;
 
     // Utility
     static double dotProduct(const std::vector<double>& v1, const std::vector<double>& v2);

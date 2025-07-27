@@ -34,7 +34,7 @@ double& Matrix::operator()(int r, int c) { return data[r  * cols + c]; }
 const double& Matrix::operator()(int r, int c) const { return data[r * cols + c]; }
 
 // CPU matrix multiplication
-Matrix Matrix::multiplyCPU(const Matrix& other){
+Matrix Matrix::multiplyCPU(const Matrix& other) const{
     if(cols != other.rows){
         throw invalid_argument("Matrix multiplication error: columns of A must match rows of B.");
     }
