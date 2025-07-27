@@ -1,6 +1,8 @@
+#pragma once
 #include "matrix.hpp"
 #include <sstream>
 #include <iomanip>
+#include <stdexcept>
 using namespace std;
 
 // Constructor
@@ -10,30 +12,44 @@ Matrix::Matrix(int rows, int cols) : rows(rows), cols(cols), data(rows * cols, 0
 }
 
 // Constructor from 2D vector
-Matrix::Matrix(const vector<vector<double>>& inputData)
-    : rows(inputData.size()), cols(inputData.empty() ? 0 : inputData[0].size()) {
-    for (const auto& row : inputData) {
-        if (row.size() != cols) throw invalid_argument("All rows must have same columns.");
-        data.insert(data.end(), row.begin(), row.end());
+Matrix::Matrix(const vector<vector<double>> &inputData){
+    rows = static_cast<int>(inputData.size());
+    if(rows == 0)
+    {
+        cols = 0;
+        return;
     }
+    cols = static_cast<int>(inputData[0].size());
+    for (int i = 0; i < rows; ++i) {
+            if (inputData[i].size() != static_cast<size_t>(cols)) {
+                throw std::invalid_argument("All rows must have the same number of columns.");
+            }
+            for (int j = 0; j < cols; ++j) {
+                data.push_back(inputData[i][j]);
+            }
+        }
 }
-
 // Access operators
 double& Matrix::operator()(int r, int c) { return data[r  * cols + c]; }
 const double& Matrix::operator()(int r, int c) const { return data[r * cols + c]; }
 
 // CPU matrix multiplication
-Matrix Matrix::multiplyCPU(const Matrix& other) const {
-    if (cols != other.rows)
-        throw invalid_argument("Matrix dimensions don't match for multiplication.");
-    Matrix result(rows, other.cols);
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < other.cols; ++j) {
-            double sum = 0;
-            for (int k = 0; k < cols; ++k) {
-                sum += (*this)(i, k) * other(k, j);
+Matrix Matrix::multiplyCPU(const Matrix& other){
+    if(cols != other.rows){
+        throw invalid_argument("Matrix multiplication error: columns of A must match rows of B.");
+    }
+    Matrix result(rows,other.cols);
+
+    for(int row = 0; row < rows; ++row)
+    {
+        for(int col = 0; col < other.cols; ++col)
+        {
+            double dotProduct = 0.0;
+            for(int k = 0; k < cols; ++k)
+            {
+                dotProduct = dotProduct + (*this)(row,k) * other(k, col);
             }
-            result(i, j) = sum;
+            result(row, col) = dotProduct;
         }
     }
     return result;
