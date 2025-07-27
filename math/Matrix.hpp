@@ -1,7 +1,5 @@
-#pragma once
 #include <vector>
 #include <stdexcept>
-#include <string>
 
 class Matrix {
 public:
@@ -9,9 +7,11 @@ public:
     int cols;
     std::vector<double> data;  // Flattened data (row-major)
 
+
     // Constructors
     Matrix(int rows, int cols);
     Matrix(const std::vector<std::vector<double>>& inputData);
+
 
     // Access elements
     double& operator()(int r, int c);
