@@ -1,5 +1,4 @@
-#pragma once
-#include "matrix.hpp"
+#include "Matrix.hpp"
 #include <sstream>
 #include <iomanip>
 #include <stdexcept>
