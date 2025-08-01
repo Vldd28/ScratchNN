@@ -6,6 +6,7 @@
 #include "Sigmoid.hpp"
 #include "Tanh.hpp"
 #include "LeakyReLU.hpp"
+#include "Softmax.hpp"
 
 /**
  * Activation Functions Library
@@ -32,6 +33,12 @@
  *    - Small slope for negative values
  *    - Configurable alpha parameter
  * 
+ * 5. Softmax - Softmax function
+ *    - Converts real numbers to probability distribution
+ *    - Output range [0, 1] with sum = 1
+ *    - Commonly used for multi-class classification output
+ *    - Numerically stable implementation
+ * 
  * Usage example:
  * ```cpp
  * #include "activation/Activations.hpp"
@@ -39,6 +46,7 @@
  * ReLU relu;
  * Sigmoid sigmoid;
  * LeakyReLU leaky_relu(0.01);
+ * Softmax softmax;
  * 
  * Matrix input(3, 3);
  * Matrix activated = relu.activate(input);

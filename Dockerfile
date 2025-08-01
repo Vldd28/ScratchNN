@@ -28,6 +28,7 @@ RUN g++ -I. -std=c++14 -O2 \
     activation/Sigmoid.cpp \
     activation/Tanh.cpp \
     activation/LeakyReLU.cpp \
+    activation/Softmax.cpp \
     layers/FullyConnected.cpp \
     layers/Activation.cpp \
     loss/MSE.cpp \

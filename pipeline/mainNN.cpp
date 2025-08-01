@@ -3,9 +3,11 @@
 #include "../loss/Loses.hpp"
 #include "../activation/Activations.hpp"
 #include <iostream>
+#include <memory>
 #include <random>
 #include <iomanip>
 #include "../mnist/MNISTLoader.hpp"
+
 
 
 
@@ -20,7 +22,8 @@ void multiClassExample() {
     network.addLayer(std::make_unique<FullyConnected>(128, 64));
     network.addLayer(std::make_unique<Activation>(std::make_unique<ReLU>()));
     network.addLayer(std::make_unique<FullyConnected>(64, 10));
-    network.addLayer(std::make_unique<Activation>(std::make_unique<Sigmoid>()));
+    //network.addLayer(std::make_unique<Activation>(std::make_unique<Sigmoid>()));
+    network.addLayer(std::make_unique<Activation>(std::make_unique<Softmax>()));
     network.setLossFunction(std::make_unique<CrossEntropy>());
 
     network.initialize();
