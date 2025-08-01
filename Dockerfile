@@ -22,7 +22,7 @@ COPY . .
 # Build the application
 # Using the same compilation flags as in tests/build.sh
 RUN g++ -I. -std=c++14 -O2 \
-    tests/TestNN.cpp \
+    pipeline/mainNN.cpp \
     math/Matrix.cpp \
     activation/ReLU.cpp \
     activation/Sigmoid.cpp \
