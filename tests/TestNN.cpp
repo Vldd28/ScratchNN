@@ -5,6 +5,7 @@
 #include <iostream>
 #include <random>
 #include <iomanip>
+#include "../mnist/MNISTLoader.hpp"
 
 /**
  * Example: Creating and training a neural network for binary classification
@@ -62,82 +63,54 @@ void binaryClassificationExample() {
 /**
  * Example: Multi-class classification (like MNIST digits)
  */
-void multiClassExample() {
-    std::cout << "\n=== Multi-Class Classification Example ===\n\n";
+ void multiClassExample() {
+     std::cout << "\n=== Multi-Class Classification Example ===\n\n";
 
-    // Create network for 10-class classification (like MNIST)
-    NeuralNetwork network(0.001);
+     NeuralNetwork network(0.001);
 
-    // Add layers
-    network.addLayer(std::make_unique<FullyConnected>(784, 128));  // 28x28 = 784 pixels
-    network.addLayer(std::make_unique<Activation>(std::make_unique<ReLU>()));
+     network.addLayer(std::make_unique<FullyConnected>(784, 128));
+     network.addLayer(std::make_unique<Activation>(std::make_unique<ReLU>()));
+     network.addLayer(std::make_unique<FullyConnected>(128, 64));
+     network.addLayer(std::make_unique<Activation>(std::make_unique<ReLU>()));
+     network.addLayer(std::make_unique<FullyConnected>(64, 10));
+     network.addLayer(std::make_unique<Activation>(std::make_unique<Sigmoid>()));
+     network.setLossFunction(std::make_unique<CrossEntropy>());
 
-    network.addLayer(std::make_unique<FullyConnected>(128, 64));
-    network.addLayer(std::make_unique<Activation>(std::make_unique<ReLU>()));
+     network.initialize();
 
-    network.addLayer(std::make_unique<FullyConnected>(64, 10));    // 10 classes
-    network.addLayer(std::make_unique<Activation>(std::make_unique<Sigmoid>()));
+     int num_images;
+     Matrix inputs = loadMNISTImages("mnist/train-images.idx3-ubyte", num_images);
+     Matrix targets = loadMNISTLabels("mnist/train-labels.idx1-ubyte");
 
-    // Set loss function
-    network.setLossFunction(std::make_unique<CrossEntropy>());
+     std::cout << "Training on MNIST (" << inputs.rows << " samples)...\n";
 
-    // Initialize
-    network.initialize();
+     // Train only on first 1000 samples for speed (adjust as needed)
+     Matrix train_inputs(1000, 784);
+     Matrix train_targets(1000, 10);
 
-    // Create dummy data (normally you'd load real data)
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<double> dis(0.0, 1.0);
+     for (int i = 0; i < 1000; ++i) {
+         for (int j = 0; j < 784; ++j) {
+             train_inputs(i, j) = inputs(i, j);
+         }
+         for (int j = 0; j < 10; ++j) {
+             train_targets(i, j) = targets(i, j);
+         }
+     }
 
-    // Create random training data (100 samples, 784 features)
-    Matrix inputs(100, 784);
-    Matrix targets(100, 10);  // One-hot encoded
+     network.train(train_inputs, train_targets, 50, true);
 
-    // Fill with random data
-    for (int i = 0; i < inputs.rows * inputs.cols; ++i) {
-        inputs.data[i] = dis(gen);
-    }
+     Matrix predictions = network.predict(train_inputs);
 
-    // Create one-hot targets (each sample belongs to random class)
-    std::uniform_int_distribution<int> class_dis(0, 9);
-    for (int i = 0; i < targets.rows; ++i) {
-        int class_label = class_dis(gen);
-        for (int j = 0; j < targets.cols; ++j) {
-            targets(i, j) = (j == class_label) ? 1.0 : 0.0;
-        }
-    }
-
-    std::cout << "Training on random data (100 samples, 784 features, 10 classes)...\n";
-
-    // Train for fewer epochs since it's just random data
-    network.train(inputs, targets, 50, true);
-
-    // Test on a small subset
-    Matrix test_inputs(5, 784);
-    Matrix test_targets(5, 10);
-
-    // Copy first 5 samples
-    for (int i = 0; i < 5; ++i) {
-        for (int j = 0; j < 784; ++j) {
-            test_inputs(i, j) = inputs(i, j);
-        }
-        for (int j = 0; j < 10; ++j) {
-            test_targets(i, j) = targets(i, j);
-        }
-    }
-
-    Matrix predictions = network.predict(test_inputs);
-    std::cout << "\nSample predictions (first 5 samples):\n";
-
-    for (int i = 0; i < 5; ++i) {
-        std::cout << "Sample " << i + 1 << " - Predicted: [";
-        for (int j = 0; j < 10; ++j) {
-            std::cout << std::fixed << std::setprecision(3) << predictions(i, j);
-            if (j < 9) std::cout << ", ";
-        }
-        std::cout << "]\n";
-    }
-}
+     std::cout << "\nSample predictions:\n";
+     for (int i = 0; i < 5; ++i) {
+         std::cout << "Sample " << i + 1 << ": [";
+         for (int j = 0; j < 10; ++j) {
+             std::cout << std::fixed << std::setprecision(2) << predictions(i, j);
+             if (j < 9) std::cout << ", ";
+         }
+         std::cout << "]\n";
+     }
+ }
 
 /**
  * Example: Regression task
@@ -174,7 +147,7 @@ void regressionExample() {
     }
 
     std::cout << "Learning y = x^2 function...\n";
-    network.train(inputs, targets, 100000, true);
+    network.train(inputs, targets, 100, true);
 
     // Test predictions
     std::cout << "\nTesting on training data:\n";

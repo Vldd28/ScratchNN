@@ -65,6 +65,9 @@ WORKDIR /app
 # Copy the executable from the build stage
 COPY --from=build --chown=appuser:appuser /app/ScratchNN /app/
 
+# Copy MNIST data files
+COPY --from=build --chown=appuser:appuser /app/mnist/ /app/mnist/
+
 # Switch to non-privileged user
 USER appuser
 

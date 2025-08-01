@@ -1,8 +1,8 @@
 #include "Activation.hpp"
 
-Activation::Activation(std::unique_ptr<ActivationFunction> activation_func) 
+Activation::Activation(std::unique_ptr<ActivationFunction> activation_func)
     : activation_function(std::move(activation_func)) {
-    
+
     if (!activation_function) {
         throw std::invalid_argument("Activation function cannot be null");
     }
@@ -11,7 +11,7 @@ Activation::Activation(std::unique_ptr<ActivationFunction> activation_func)
 Matrix Activation::forward(const Matrix& input) {
     // Store input for backward pass
     last_input = input;
-    
+
     // Apply activation function
     return activation_function->activate(input);
 }
@@ -19,14 +19,14 @@ Matrix Activation::forward(const Matrix& input) {
 Matrix Activation::backward(const Matrix& gradient_output) {
     // Compute activation derivative at the stored input
     Matrix activation_derivative = activation_function->derivative(last_input);
-    
+
     // Element-wise multiplication: gradient_input = gradient_output * activation_derivative
     Matrix gradient_input(gradient_output.rows, gradient_output.cols);
-    
+
     for (int i = 0; i < gradient_output.rows * gradient_output.cols; ++i) {
         gradient_input.data[i] = gradient_output.data[i] * activation_derivative.data[i];
     }
-    
+
     return gradient_input;
 }
 
